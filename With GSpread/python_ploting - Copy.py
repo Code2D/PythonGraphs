@@ -1,10 +1,54 @@
+print('[ * ] Loading Imports')
+
 # Imports
 import matplotlib.pyplot as plt
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+print('[ * ] Loaded Modules')
+
+# Setting up connection to Google Sheet
+
+print('[ * ] Connecting to server') #Logs Progress
+
+scope = ['https://spreadsheets.google.com/feeds',
+         'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('client_secrets.json', scope)
+client = gspread.authorize(creds)
+sheet = client.open('PythonGraphsData').sheet1
+
+print(sheet.cell(2,4).value)
+
+scan = 1
+
+samplesize = 0
+
+X_Axis = []
+
+Y_Axis = []
+
+while scan == 1:
+    if sheet.cell(samplesize + 1, 2).value == "end":
+        scan = 0
+    else:
+        samplesize += 1
+        X_Axis.append(sheet.cell(samplesize, 2).value)
+        print(sheet.cell(samplesize, 2).value)
+
+print ("outside While?")
+samplesize = 0
+scan = 1
+
+while scan == 1:
+    if sheet.cell(samplesize + 1, 2).value == "end":
+        scan = 0
+    else:
+        samplesize += 1
+        Y_Axis.append(sheet.cell(samplesize, 2).value)
+        print(sheet.cell(samplesize, 2).value)
 
 # Describing data
-plt.plot([1955, 1960, 1965, 1970, 1975, 1980, 1985, 1990, 1995, 2000, 2005, 2010, 2015, 2019],
-         [2136391, 2372594, 2626645, 2818387, 3082633, 3146619, 3268236, 3398172, 3674936, 
-          3858999, 4135355, 4370062, 4614532, 4792409])
+plt.plot(X_Axis, Y_Axis)
 
 # Defining Graph
 plt.ylabel('Population')
@@ -13,4 +57,4 @@ plt.title("New Zealand's Population Growth")
 plt.show()
 
 # Console Messages
-print('Plot Compilied')
+print('[ * ] Plot Compilied')
